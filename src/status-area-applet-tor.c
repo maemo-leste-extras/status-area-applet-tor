@@ -52,6 +52,9 @@ struct _StatusAreaAppletTorPrivate
 {
 	GtkWidget *conn_icon;
 	GtkWidget *menu_button;
+	GtkWidget *proxy_chkbutton;
+	GtkWidget *settings_dialog;
+	gboolean proxying_state;
 	gint connection_state;
 	gchar *auth_cookie;
 	sock_t *sock;
@@ -135,6 +138,41 @@ setstatusend:
 	return;
 }
 
+static void status_area_applet_tor_proxy_chkbutton_toggled(GtkWidget *button,
+		StatusAreaAppletTor *self)
+{
+	StatusAreaAppletTorPrivate *priv = status_area_applet_tor_get_instance_private(self);
+
+	priv->proxying_state = !priv->proxying_state;
+}
+
+static void status_area_applet_tor_clicked(GtkWidget *button, StatusAreaAppletTor *self)
+{
+	StatusAreaAppletTorPrivate *priv = status_area_applet_tor_get_instance_private(self);
+
+	GtkWidget *toplevel = gtk_widget_get_toplevel(button);
+	gtk_widget_hide(toplevel);
+
+	priv->settings_dialog = gtk_dialog_new();
+	gtk_window_set_title(GTK_WINDOW(priv->settings_dialog), "Tor Status");
+	gtk_window_set_transient_for(GTK_WINDOW(priv->settings_dialog), GTK_WINDOW(toplevel));
+	gtk_window_set_destroy_with_parent(GTK_WINDOW(priv->settings_dialog), TRUE);
+
+	priv->proxy_chkbutton = hildon_check_button_new(
+			HILDON_SIZE_FINGER_HEIGHT|HILDON_SIZE_AUTO_WIDTH);
+	gtk_button_set_label(GTK_BUTTON(priv->proxy_chkbutton), "Enable proxying with environment");
+	gtk_button_set_alignment(GTK_BUTTON(priv->proxy_chkbutton), 0.5f, 0.5f);
+	hildon_check_button_set_active(HILDON_CHECK_BUTTON(priv->proxy_chkbutton),
+			priv->proxying_state);
+	gtk_box_pack_start(GTK_BOX(GTK_DIALOG(priv->settings_dialog)->vbox),
+			priv->proxy_chkbutton, TRUE, TRUE, 0);
+
+	g_signal_connect(priv->proxy_chkbutton, "toggled",
+			G_CALLBACK(status_area_applet_tor_proxy_chkbutton_toggled), self);
+
+	gtk_widget_show_all(priv->settings_dialog);
+}
+
 static void status_area_applet_tor_init(StatusAreaAppletTor *self)
 {
 	StatusAreaAppletTorPrivate *priv = status_area_applet_tor_get_instance_private(self);
@@ -155,6 +193,8 @@ static void status_area_applet_tor_init(StatusAreaAppletTor *self)
 	hildon_button_set_alignment(HILDON_BUTTON(priv->menu_button), 0.0, 0.0, 1.0, 1.0);
 	hildon_button_set_title(HILDON_BUTTON(priv->menu_button), "Tor");
 
+	g_signal_connect(priv->menu_button, "clicked",
+			G_CALLBACK(status_area_applet_tor_clicked), self);
 
 	gtk_container_add(GTK_CONTAINER(self), priv->menu_button);
 	gtk_widget_show_all(GTK_WIDGET(self));
