@@ -1,0 +1,20 @@
+Source: status-area-applet-tor
+Section: user/desktop
+Priority: extra
+Maintainer: Ivan J. <parazyd@dyne.org>
+Build-Depends:
+ debhelper (>= 10),
+ libhildon1-dev,
+ libhildondesktop1-dev,
+ libgtk2.0-dev,
+ libglib2.0-dev,
+ libgconf2-dev,
+ libosso-dev,
+Standards-Version: 4.2.0
+
+Package: status-area-applet-tor
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}, tor
+Description: Tor status area applet
+ Used to control the local running Tor instance.
+XB-Maemo-Display-Name: Tor Status Area Applet

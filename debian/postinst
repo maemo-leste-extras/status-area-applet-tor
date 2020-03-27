@@ -1,0 +1,24 @@
+#!/bin/sh
+
+print_torrc() {
+	cat <<EOF
+# status-area-applet-tor minimal torrc
+ControlPort 9051
+CookieAuthentication 1
+CookieAuthFile /var/run/tor/control.authcookie
+CookieAuthFileGroupReadable 1
+EOF
+}
+
+gpasswd -a user debian-tor
+
+if ! grep -q 'status-area-applet-tor' /etc/tor/torrc; then
+	mv /etc/tor/torrc /etc/tor/torrc.dist
+	print_torrc > /etc/tor/torrc
+fi
+
+#if command -v systemctl >/dev/null ; then
+#	systemctl restart tor
+#else
+#	/etc/init.d/tor restart
+#fi
