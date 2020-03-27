@@ -1,0 +1,4 @@
+ControlPort 9051
+CookieAuthentication 1
+CookieAuthFile /var/lib/tor/auth_cookie
+CookieAuthFileGroupReadable 1
