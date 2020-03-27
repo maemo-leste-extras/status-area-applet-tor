@@ -32,8 +32,6 @@
 #define STATUS_AREA_APPLET_TOR_TYPE (status_area_applet_tor_get_type())
 #define STATUS_AREA_APPLET_TOR(obj) (G_TYPE_CHECK_INSTANCE_CAST ((obj), \
 			STATUS_AREA_APPLET_TOR_TYPE, StatusAreaAppletTor))
-#define STATUS_AREA_APPLET_TOR_GET_PRIVATE(obj) (G_TYPE_INSTANCE_GET_PRIVATE (obj, \
-			STATUS_AREA_APPLET_TOR_TYPE, StatusAreaAppletTorPrivate))
 
 typedef struct _StatusAreaAppletTor StatusAreaAppletTor;
 typedef struct _StatusAreaAppletTorClass StatusAreaAppletTorClass;
@@ -59,8 +57,8 @@ struct _StatusAreaAppletTorPrivate
 	sock_t *sock;
 };
 
-HD_DEFINE_PLUGIN_MODULE(StatusAreaAppletTor, status_area_applet_tor,
-		HD_TYPE_STATUS_MENU_ITEM)
+HD_DEFINE_PLUGIN_MODULE_EXTENDED(StatusAreaAppletTor, status_area_applet_tor,
+		HD_TYPE_STATUS_MENU_ITEM, G_ADD_PRIVATE_DYNAMIC(StatusAreaAppletTor),,);
 
 static void status_area_applet_tor_set_status_icon(gpointer data, GdkPixbuf *pixbuf)
 {
@@ -72,7 +70,7 @@ static void status_area_applet_tor_set_status_icon(gpointer data, GdkPixbuf *pix
 
 static void status_area_applet_tor_set_menu_icon(StatusAreaAppletTor *self, GdkPixbuf *pixbuf)
 {
-	StatusAreaAppletTorPrivate *priv = STATUS_AREA_APPLET_TOR_GET_PRIVATE(self);
+	StatusAreaAppletTorPrivate *priv = status_area_applet_tor_get_instance_private(self);
 	priv->conn_icon = gtk_image_new_from_pixbuf(pixbuf);
 	hildon_button_set_image(HILDON_BUTTON(priv->button), priv->conn_icon);
 	pixbuf = NULL;
@@ -80,7 +78,7 @@ static void status_area_applet_tor_set_menu_icon(StatusAreaAppletTor *self, GdkP
 
 static void status_area_applet_tor_set_icons(StatusAreaAppletTor *self)
 {
-	StatusAreaAppletTorPrivate *priv = STATUS_AREA_APPLET_TOR_GET_PRIVATE(self);
+	StatusAreaAppletTorPrivate *priv = status_area_applet_tor_get_instance_private(self);
 	GdkPixbuf *pixbuf = NULL;
 	GtkIconTheme *theme = gtk_icon_theme_get_default();
 
@@ -105,7 +103,7 @@ static void status_area_applet_tor_set_icons(StatusAreaAppletTor *self)
 
 static void status_area_applet_tor_tctl_set_status(StatusAreaAppletTor *self)
 {
-	StatusAreaAppletTorPrivate *priv = STATUS_AREA_APPLET_TOR_GET_PRIVATE(self);
+	StatusAreaAppletTorPrivate *priv = status_area_applet_tor_get_instance_private(self);
 	gchar *res;
 
 	/* TODO: Refactor into multiple functions */
@@ -139,7 +137,8 @@ setstatusend:
 
 static void status_area_applet_tor_init(StatusAreaAppletTor *self)
 {
-	StatusAreaAppletTorPrivate *priv = STATUS_AREA_APPLET_TOR_GET_PRIVATE(self);
+	//StatusAreaAppletTorPrivate *priv = STATUS_AREA_APPLET_TOR_GET_PRIVATE(self);
+	StatusAreaAppletTorPrivate *priv = status_area_applet_tor_get_instance_private(self);
 	GdkPixbuf *pixbuf = NULL;
 	GtkIconTheme *theme = gtk_icon_theme_get_default();
 
@@ -171,7 +170,6 @@ static void status_area_applet_tor_class_init(StatusAreaAppletTorClass *class)
 {
 	GObjectClass *object_class = G_OBJECT_CLASS(class);
 	object_class->finalize = status_area_applet_tor_finalize;
-	g_type_class_add_private(class, sizeof(StatusAreaAppletTorPrivate));
 }
 
 static void status_area_applet_tor_class_finalize(StatusAreaAppletTorClass *class)
