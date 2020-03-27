@@ -51,7 +51,7 @@ struct _StatusAreaAppletTorClass
 struct _StatusAreaAppletTorPrivate
 {
 	GtkWidget *conn_icon;
-	GtkWidget *button;
+	GtkWidget *menu_button;
 	gint connection_state;
 	gchar *auth_cookie;
 	sock_t *sock;
@@ -72,7 +72,7 @@ static void status_area_applet_tor_set_menu_icon(StatusAreaAppletTor *self, GdkP
 {
 	StatusAreaAppletTorPrivate *priv = status_area_applet_tor_get_instance_private(self);
 	priv->conn_icon = gtk_image_new_from_pixbuf(pixbuf);
-	hildon_button_set_image(HILDON_BUTTON(priv->button), priv->conn_icon);
+	hildon_button_set_image(HILDON_BUTTON(priv->menu_button), priv->conn_icon);
 	pixbuf = NULL;
 }
 
@@ -97,7 +97,7 @@ static void status_area_applet_tor_set_icons(StatusAreaAppletTor *self)
 
 	g_object_unref(pixbuf);
 
-	hildon_button_set_value(HILDON_BUTTON(priv->button),
+	hildon_button_set_value(HILDON_BUTTON(priv->menu_button),
 			priv->connection_state ? "Connected" : "Disconnected");
 }
 
@@ -137,7 +137,6 @@ setstatusend:
 
 static void status_area_applet_tor_init(StatusAreaAppletTor *self)
 {
-	//StatusAreaAppletTorPrivate *priv = STATUS_AREA_APPLET_TOR_GET_PRIVATE(self);
 	StatusAreaAppletTorPrivate *priv = status_area_applet_tor_get_instance_private(self);
 	GdkPixbuf *pixbuf = NULL;
 	GtkIconTheme *theme = gtk_icon_theme_get_default();
@@ -146,18 +145,18 @@ static void status_area_applet_tor_init(StatusAreaAppletTor *self)
 	priv->sock = sock_new();
 	priv->connection_state = 0;
 	priv->auth_cookie = tctl_read_auth_cookie("/var/run/tor/control.authcookie");
-	priv->button = hildon_button_new(HILDON_SIZE_FINGER_HEIGHT,
+	priv->menu_button = hildon_button_new(HILDON_SIZE_FINGER_HEIGHT,
 			HILDON_BUTTON_ARRANGEMENT_VERTICAL);
 
 	status_area_applet_tor_tctl_set_status(self);
 	status_area_applet_tor_set_icons(self);
 
-	hildon_button_set_style(HILDON_BUTTON(priv->button), HILDON_BUTTON_STYLE_PICKER);
-	hildon_button_set_alignment(HILDON_BUTTON(priv->button), 0.0, 0.0, 1.0, 1.0);
-	hildon_button_set_title(HILDON_BUTTON(priv->button), "Tor");
+	hildon_button_set_style(HILDON_BUTTON(priv->menu_button), HILDON_BUTTON_STYLE_PICKER);
+	hildon_button_set_alignment(HILDON_BUTTON(priv->menu_button), 0.0, 0.0, 1.0, 1.0);
+	hildon_button_set_title(HILDON_BUTTON(priv->menu_button), "Tor");
 
 
-	gtk_container_add(GTK_CONTAINER(self), priv->button);
+	gtk_container_add(GTK_CONTAINER(self), priv->menu_button);
 	gtk_widget_show_all(GTK_WIDGET(self));
 }
 
