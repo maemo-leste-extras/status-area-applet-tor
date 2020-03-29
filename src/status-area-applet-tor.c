@@ -144,6 +144,11 @@ static void status_area_applet_tor_proxy_chkbutton_toggled(GtkWidget *button,
 	StatusAreaAppletTorPrivate *priv = status_area_applet_tor_get_instance_private(self);
 
 	priv->proxying_state = !priv->proxying_state;
+
+	if (priv->proxying_state)
+		system("sudo /usr/sbin/tor_transparent_proxy.sh enable");
+	else
+		system("sudo /usr/sbin/tor_transparent_proxy.sh disable");
 }
 
 static void status_area_applet_tor_clicked(GtkWidget *button, StatusAreaAppletTor *self)
