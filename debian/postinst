@@ -7,6 +7,11 @@ ControlPort 9051
 CookieAuthentication 1
 CookieAuthFile /var/run/tor/control.authcookie
 CookieAuthFileGroupReadable 1
+
+VirtualAddrNetworkIPv4 10.192.0.0/10
+AutomapHostOnResolve 1
+TransPort 9040 IsolateClientAddr IsolateClientProtocol IsolateDestAddr IsolateDestPort
+DNSPort 5353
 EOF
 }
 
