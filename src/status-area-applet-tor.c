@@ -163,7 +163,7 @@ static void status_area_applet_tor_clicked(GtkWidget *button, StatusAreaAppletTo
 
 	priv->proxy_chkbutton = hildon_check_button_new(
 			HILDON_SIZE_FINGER_HEIGHT|HILDON_SIZE_AUTO_WIDTH);
-	gtk_button_set_label(GTK_BUTTON(priv->proxy_chkbutton), "Enable proxying with environment");
+	gtk_button_set_label(GTK_BUTTON(priv->proxy_chkbutton), "Enable transparent system proxying");
 	gtk_button_set_alignment(GTK_BUTTON(priv->proxy_chkbutton), 0.5f, 0.5f);
 	hildon_check_button_set_active(HILDON_CHECK_BUTTON(priv->proxy_chkbutton),
 			priv->proxying_state);
