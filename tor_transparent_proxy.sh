@@ -118,6 +118,12 @@ disable_tproxy() {
 
 	iptables -F
 	iptables -t nat -F
+	iptables -P INPUT ACCEPT
+	iptables -P FORWARD ACCEPT
+	iptables -P OUTPUT ACCEPT
+	ip6tables -P INPUT ACCEPT
+	ip6tables -P FORWARD ACCEPT
+	ip6tables -P OUTPUT ACCEPT
 }
 
 case "$1" in
