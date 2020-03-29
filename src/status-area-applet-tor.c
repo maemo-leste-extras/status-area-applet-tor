@@ -91,12 +91,10 @@ static void status_area_applet_tor_set_icons(StatusAreaAppletTor *self)
 		pixbuf = gtk_icon_theme_load_icon(theme, "statusarea_tor_disabled", 48, 0, NULL);
 	status_area_applet_tor_set_menu_icon(self, pixbuf);
 
-	if (priv->connection_state)
+	if (priv->proxying_state) {
 		pixbuf = gtk_icon_theme_load_icon(theme, "statusarea_tor_connected", 18, 0, NULL);
-	else
-		pixbuf = gtk_icon_theme_load_icon(theme, "statusarea_tor_connecting", 18, 0, NULL);
-		/* TODO: Don't actually show if not connecting */
-	status_area_applet_tor_set_status_icon(self, pixbuf);
+		status_area_applet_tor_set_status_icon(self, pixbuf);
+	}
 
 	g_object_unref(pixbuf);
 
